@@ -33,6 +33,7 @@
       ]
     }
   },
+  "publisher": "Jonpena",
   "repository": {
     "type": "git",
     "url": "https://github.com/joncodeofficial/vicecode.git"
