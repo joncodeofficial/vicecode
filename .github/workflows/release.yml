@@ -1,0 +1,71 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN }}
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install vsce
+        run: npm install -g @vscode/vsce
+
+      - name: Install ovsx
+        run: npm install -g ovsx
+
+      - name: Package .VSIX
+        run: npm run package
+
+      - name: Semantic Release
+        id: semantic-release
+        run: |
+          echo "Running semantic-release..."
+          npx semantic-release > semantic.log
+          echo "new-release-published=false" >> $GITHUB_OUTPUT
+          if grep -q "Published release" semantic.log; then
+            echo "✅ Release published"
+            echo "new-release-published=true" >> $GITHUB_OUTPUT
+          else
+            echo "ℹ️ No new release published"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GIT_AUTHOR_NAME: github-actions[bot]
+          GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+          GIT_COMMITTER_NAME: github-actions[bot]
+          GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+
+      - name: Publish to VS Code Marketplace
+        if: steps.semantic-release.outputs.new-release-published == 'true'
+        run: npx vsce publish --pat $VSCE_PAT --no-yarn
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+
+      - name: Publish to Open VSX Registry
+        if: steps.semantic-release.outputs.new-release-published == 'true'
+        run: npx ovsx publish --pat $OVSX_PAT
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
