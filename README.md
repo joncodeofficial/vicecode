@@ -1,65 +1,53 @@
-# vicecode README
+# ViceCode
 
-This is the README for your extension "vicecode". After writing up a brief description, we recommend including the following sections.
+Play **GTA: Vice City** inside VS Code — directly in the primary sidebar via WebAssembly.
 
-## Features
+## How it works
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+ViceCode runs a local HTTP server (port 1986) that serves the game engine from your machine. The sidebar opens a webview with an iframe pointing to that server, giving the game the full browser context it needs (Service Worker, OPFS, SharedArrayBuffer).
 
-For example if there is an image subfolder under your extension project workspace:
+No internet required after the first setup. Your game data is stored locally in the browser's OPFS — it persists between sessions.
 
-\!\[feature X\]\(images/feature-x.png\)
+## Setup
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+1. Install the extension
+2. Click the **palm tree icon** in the Activity Bar
+3. Click **Download game.tar.gz** — this opens archive.org in your browser
+4. Once downloaded, use **Select game.tar.gz** to import it
+5. Wait for the import to finish, then click **Start to play**
+
+> The game data only needs to be imported once. After that it loads instantly.
+
+## Controls
+
+| Action | Key |
+|---|---|
+| Move | `W A S D` or arrow keys |
+| Run | `Shift` |
+| Attack / Shoot | `Ctrl` or `Left Click` |
+| Enter / Exit vehicle | `F` |
+| Camera | Mouse |
+| Pause | `Esc` |
+
+## Toolbar
+
+Hover over the top of the game panel to reveal the toolbar:
+
+- **↺ Restart** — reloads the game
+- **✕ Close** — hides the sidebar
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- VS Code 1.120+
+- A copy of `game.tar.gz` (GTA: Vice City game files)
+- ~700MB of free browser storage (OPFS)
 
-## Extension Settings
+## Credits
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+Built on top of the open source re3/reVC port compiled to WebAssembly.
 
-For example:
+- WASM engine: [@specialist003](https://github.com/okhmanyuk-ev), [@caiiiycuk](https://www.youtube.com/caiiiycuk), [@SerGen](https://t.me/ser_var)
+- reVCDOS base: [@Lolendor](https://github.com/Lolendor)
+- re3/Vice City source: [SugaryHull/re3](https://github.com/SugaryHull/re3/tree/miami)
 
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+> This extension is not affiliated with Rockstar Games. GTA: Vice City is property of Rockstar Games.
