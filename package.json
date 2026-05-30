@@ -33,9 +33,13 @@
       ]
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joncodeofficial/vicecode.git"
+  },
   "scripts": {
     "lint": "eslint .",
-    "package": "vsce package --out ./dist/"
+    "package": "mkdir -p dist && vsce package --out ./dist/"
   },
   "devDependencies": {
     "@types/vscode": "^1.120.0",

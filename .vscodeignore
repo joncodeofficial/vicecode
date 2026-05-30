@@ -1,10 +1,33 @@
+# Dev / CI
 .vscode/**
 .vscode-test/**
+.github/**
 test/**
 .gitignore
+.releaserc.json
 .yarnrc
 vsc-extension-quickstart.md
 **/jsconfig.json
 **/*.map
 **/eslint.config.mjs
 **/.vscode-test.*
+
+# Game source (only dist is needed at runtime)
+game/src/**
+game/public/**
+game/index.html
+game/package.json
+game/pnpm-lock.yaml
+game/vite.config.js
+game/.env.example
+game/.gitignore
+game/.prettierignore
+game/.github/**
+game/IDEAS.md
+game/README.md
+game/node_modules/**
+
+# Semantic release / dev deps (not needed in extension)
+node_modules/@semantic-release/**
+node_modules/conventional-changelog-conventionalcommits/**
+node_modules/semantic-release/**
