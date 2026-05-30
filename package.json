@@ -2,7 +2,7 @@
   "name": "vicecode",
   "displayName": "ViceCode",
   "description": "GTA Vice City WASM inside VS Code",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.120.0"
   },
