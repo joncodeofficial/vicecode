@@ -1,0 +1,8 @@
+node_modules/
+game/node_modules/
+
+# Game data files (too large for git)
+game.tar.gz
+game/game.tar.gz
+game/dist/game.tar.gz
+game/public/game.tar.gz

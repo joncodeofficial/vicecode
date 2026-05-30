@@ -1,0 +1,47 @@
+{
+  "name": "vicecode",
+  "displayName": "ViceCode",
+  "description": "GTA Vice City WASM inside VS Code",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.120.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": ["onView:vicecode.gameView"],
+  "main": "./extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "vicecodeContainer",
+          "title": "GTA",
+          "icon": "media/vc-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "vicecodeContainer": [
+        {
+          "type": "webview",
+          "id": "vicecode.gameView",
+          "name": "VICE CITY WASM"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.120.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "eslint": "^9.39.3",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}
