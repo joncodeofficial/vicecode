@@ -1,6 +1,11 @@
 node_modules/
 game/node_modules/
 
+# Boilerplate
+.vscode-test.mjs
+test/
+vsc-extension-quickstart.md
+
 # Game data files (too large for git)
 game.tar.gz
 game/game.tar.gz
