@@ -47,7 +47,11 @@ function startServer() {
       };
 
       if (ext === '.html') {
-        const inject = `<script>
+        const inject = `<style>
+::-webkit-scrollbar { display: none; }
+* { scrollbar-width: none; -ms-overflow-style: none; }
+</style>
+<script>
 document.addEventListener('click', e => {
   const a = e.target.closest('a[href]');
   if (!a) return;
@@ -82,30 +86,76 @@ document.addEventListener('click', e => {
 class ViceCodeViewProvider {
   static viewType = 'vicecode.gameView';
 
+  constructor(extensionUri) {
+    this._extensionUri = extensionUri;
+  }
+
   resolveWebviewView(webviewView) {
-    webviewView.webview.options = { enableScripts: true };
-    webviewView.webview.html = this._getHtml();
+    const codiconUri = webviewView.webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, 'node_modules', '@vscode', 'codicons', 'dist', 'codicon.css')
+    );
+    webviewView.webview.options = {
+      enableScripts: true,
+      localResourceRoots: [
+        vscode.Uri.joinPath(this._extensionUri, 'node_modules', '@vscode', 'codicons', 'dist')
+      ]
+    };
+    webviewView.webview.html = this._getHtml(codiconUri);
     webviewView.webview.onDidReceiveMessage(msg => {
       if (msg.type === 'openExternal' && msg.url) {
         vscode.env.openExternal(vscode.Uri.parse(msg.url));
       }
+      if (msg.type === 'close') {
+        vscode.commands.executeCommand('workbench.action.toggleSidebarVisibility');
+      }
     });
   }
 
-  _getHtml() {
+  _getHtml(codiconUri) {
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' http://127.0.0.1:${PORT}; frame-src http://127.0.0.1:${PORT}; script-src 'unsafe-inline'; style-src 'unsafe-inline';" />
+  <link rel="stylesheet" href="${codiconUri}" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' http://127.0.0.1:${PORT}; frame-src http://127.0.0.1:${PORT}; script-src 'unsafe-inline'; style-src 'unsafe-inline' vscode-resource:; font-src vscode-resource:;" />
   <style>
     * { margin: 0; padding: 0; }
     html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
     #game { display: block; border: none; }
+    #toolbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      padding: 0 1rem;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+      z-index: 9999;
+    }
+    #toolbar:hover { opacity: 1; }
+    #toolbar button {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: #fff;
+      font-size: 14px;
+      width: 26px; height: 26px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #toolbar button:hover { background: rgba(255,255,255,0.3); }
   </style>
 </head>
 <body>
   <iframe id="game" src="http://127.0.0.1:${PORT}" allow="cross-origin-isolated; fullscreen; autoplay"></iframe>
+  <div id="toolbar">
+    <button id="btn-restart" title="Restart"><i class="codicon codicon-debug-restart"></i></button>
+    <button id="btn-close"   title="Close"><i class="codicon codicon-close"></i></button>
+  </div>
   <script>
     const vscode = acquireVsCodeApi();
     const frame  = document.getElementById('game');
@@ -119,6 +169,14 @@ class ViceCodeViewProvider {
       fit(contentRect.width, contentRect.height);
     }).observe(root);
     fit(root.clientWidth, root.clientHeight);
+
+    document.getElementById('btn-restart').addEventListener('click', () => {
+      frame.src = frame.src;
+    });
+
+    document.getElementById('btn-close').addEventListener('click', () => {
+      vscode.postMessage({ type: 'close' });
+    });
 
     window.addEventListener('message', e => {
       if (e.data && e.data.type === 'openExternal') {
@@ -137,7 +195,7 @@ function activate(context) {
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(
       ViceCodeViewProvider.viewType,
-      new ViceCodeViewProvider(),
+      new ViceCodeViewProvider(context.extensionUri),
       { webviewOptions: { retainContextWhenHidden: true } }
     )
   );
