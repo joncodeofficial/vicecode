@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0](https://github.com/joncodeofficial/vicecode/compare/v1.1.1...v1.2.0) (2026-05-31)
+
+### Features
+
+* add marketplace icon ([2e6874f](https://github.com/joncodeofficial/vicecode/commit/2e6874f50e1d9e7b1d802219560bdf1e66fe4f17))
+
 ## [1.1.1](https://github.com/joncodeofficial/vicecode/compare/v1.1.0...v1.1.1) (2026-05-31)
 
 ### Bug Fixes
