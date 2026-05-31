@@ -42,8 +42,7 @@ jobs:
       - name: Semantic Release
         id: semantic-release
         run: |
-          echo "Running semantic-release..."
-          npx semantic-release > semantic.log
+          npx semantic-release 2>&1 | tee semantic.log
           echo "new-release-published=false" >> $GITHUB_OUTPUT
           if grep -q "Published release" semantic.log; then
             echo "✅ Release published"
