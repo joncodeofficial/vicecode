@@ -33,6 +33,7 @@
       ]
     }
   },
+  "icon": "media/icon.png",
   "publisher": "Jonpena",
   "repository": {
     "type": "git",
