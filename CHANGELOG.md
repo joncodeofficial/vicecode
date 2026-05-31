@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0](https://github.com/joncodeofficial/vicecode/compare/v1.0.0...v1.1.0) (2026-05-31)
+
+### Features
+
+* publish ViceCode to VS Code Marketplace and Open VSX ([54f164a](https://github.com/joncodeofficial/vicecode/commit/54f164abd5c22679007afde30c318e19b8ebc3cd))
+
 ## 1.0.0 (2026-05-30)
 
 ### Features
