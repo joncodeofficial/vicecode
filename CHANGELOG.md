@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.1](https://github.com/joncodeofficial/vicecode/compare/v1.1.0...v1.1.1) (2026-05-31)
+
+### Bug Fixes
+
+* restore semantic-release workflow pattern ([1b09f12](https://github.com/joncodeofficial/vicecode/commit/1b09f12f508bd9bef5e9ca33c24b1833c393b5de))
+
 ## [1.1.0](https://github.com/joncodeofficial/vicecode/compare/v1.0.0...v1.1.0) (2026-05-31)
 
 ### Features
