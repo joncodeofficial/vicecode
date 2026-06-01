@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.1](https://github.com/joncodeofficial/vicecode/compare/v1.2.0...v1.2.1) (2026-06-01)
+
+### Bug Fixes
+
+* exclude dist folder from vsix package ([690766c](https://github.com/joncodeofficial/vicecode/commit/690766c6c57562c36e893de81c8ce3dbfc8391e0))
+
 ## [1.2.0](https://github.com/joncodeofficial/vicecode/compare/v1.1.1...v1.2.0) (2026-05-31)
 
 ### Features
