@@ -1,3 +1,6 @@
+# Build output
+dist/**
+
 # Dev / CI
 .vscode/**
 .vscode-test/**
