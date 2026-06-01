@@ -25,7 +25,8 @@
         {
           "type": "webview",
           "id": "vicecode.gameView",
-          "name": "VICE CITY WASM"
+          "name": "VICE CITY WASM",
+          "icon": "media/vc-icon.svg"
         }
       ]
     }

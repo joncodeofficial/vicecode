@@ -1,56 +1,61 @@
-const vscode = require('vscode');
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
+const vscode = require("vscode");
+const http = require("http");
+const fs = require("fs");
+const path = require("path");
 
-const GAME_DIST = path.join(__dirname, 'game', 'dist');
+const GAME_DIST = path.join(__dirname, "game", "dist");
 const PORT = 1986;
 
+const INJECT_CSS = fs.readFileSync(
+  path.join(__dirname, "assets", "inject.css"),
+  "utf8",
+);
+
 const MIME = {
-  '.html': 'text/html',
-  '.js':   'application/javascript',
-  '.mjs':  'application/javascript',
-  '.css':  'text/css',
-  '.wasm': 'application/wasm',
-  '.mp4':  'video/mp4',
-  '.webp': 'image/webp',
-  '.png':  'image/png',
-  '.jpg':  'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.gz':   'application/gzip',
-  '.json': 'application/json',
-  '.svg':  'image/svg+xml',
-  '.ico':  'image/x-icon',
+  ".html": "text/html",
+  ".js": "application/javascript",
+  ".mjs": "application/javascript",
+  ".css": "text/css",
+  ".wasm": "application/wasm",
+  ".mp4": "video/mp4",
+  ".webp": "image/webp",
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".gz": "application/gzip",
+  ".json": "application/json",
+  ".svg": "image/svg+xml",
+  ".ico": "image/x-icon",
 };
 
 let server;
 
 function startServer() {
   server = http.createServer((req, res) => {
-    const urlPath = req.url.split('?')[0];
-    const filePath = path.join(GAME_DIST, urlPath === '/' ? 'index.html' : urlPath);
+    const urlPath = req.url.split("?")[0];
+    const filePath = path.join(
+      GAME_DIST,
+      urlPath === "/" ? "index.html" : urlPath,
+    );
 
     fs.readFile(filePath, (err, data) => {
       if (err) {
         res.writeHead(404);
-        res.end('Not found');
+        res.end("Not found");
         return;
       }
 
       const ext = path.extname(filePath).toLowerCase();
       const headers = {
-        'Content-Type': MIME[ext] || 'application/octet-stream',
-        'Cross-Origin-Opener-Policy': 'same-origin',
-        'Cross-Origin-Embedder-Policy': 'require-corp',
-        'Access-Control-Allow-Origin': '*',
-        'Cross-Origin-Resource-Policy': 'cross-origin',
+        "Content-Type": MIME[ext] || "application/octet-stream",
+        "Cross-Origin-Opener-Policy": "same-origin",
+        "Cross-Origin-Embedder-Policy": "require-corp",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin",
       };
 
-      if (ext === '.html') {
-        const inject = `<style>
-::-webkit-scrollbar { display: none; }
-* { scrollbar-width: none; -ms-overflow-style: none; }
-</style>
+      if (ext === ".html") {
+        const inject = `<style>${INJECT_CSS}</style>
 <script>
 document.addEventListener('click', e => {
   const a = e.target.closest('a[href]');
@@ -62,8 +67,10 @@ document.addEventListener('click', e => {
   }
 });
 </script>`;
-        const patched = data.toString().replace('</body>', inject + '\n</body>');
-        headers['Content-Length'] = Buffer.byteLength(patched);
+        const patched = data
+          .toString()
+          .replace("</body>", inject + "\n</body>");
+        headers["Content-Length"] = Buffer.byteLength(patched);
         res.writeHead(200, headers);
         res.end(patched);
         return;
@@ -74,17 +81,19 @@ document.addEventListener('click', e => {
     });
   });
 
-  server.listen(PORT, '127.0.0.1', () => {
+  server.listen(PORT, "127.0.0.1", () => {
     console.log(`ViceCode server running on http://127.0.0.1:${PORT}`);
   });
 
-  server.on('error', (err) => {
-    vscode.window.showErrorMessage(`ViceCode: no se pudo iniciar el servidor en el puerto ${PORT}. ${err.message}`);
+  server.on("error", (err) => {
+    vscode.window.showErrorMessage(
+      `ViceCode: no se pudo iniciar el servidor en el puerto ${PORT}. ${err.message}`,
+    );
   });
 }
 
 class ViceCodeViewProvider {
-  static viewType = 'vicecode.gameView';
+  static viewType = "vicecode.gameView";
 
   constructor(extensionUri) {
     this._extensionUri = extensionUri;
@@ -92,63 +101,52 @@ class ViceCodeViewProvider {
 
   resolveWebviewView(webviewView) {
     const codiconUri = webviewView.webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'node_modules', '@vscode', 'codicons', 'dist', 'codicon.css')
+      vscode.Uri.joinPath(
+        this._extensionUri,
+        "node_modules",
+        "@vscode",
+        "codicons",
+        "dist",
+        "codicon.css",
+      ),
+    );
+    const webviewCssUri = webviewView.webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, "assets", "webview.css"),
     );
     webviewView.webview.options = {
       enableScripts: true,
       localResourceRoots: [
-        vscode.Uri.joinPath(this._extensionUri, 'node_modules', '@vscode', 'codicons', 'dist')
-      ]
+        vscode.Uri.joinPath(this._extensionUri, "assets"),
+        vscode.Uri.joinPath(
+          this._extensionUri,
+          "node_modules",
+          "@vscode",
+          "codicons",
+          "dist",
+        ),
+      ],
     };
-    webviewView.webview.html = this._getHtml(codiconUri);
-    webviewView.webview.onDidReceiveMessage(msg => {
-      if (msg.type === 'openExternal' && msg.url) {
+    webviewView.webview.html = this._getHtml(codiconUri, webviewCssUri);
+    webviewView.webview.onDidReceiveMessage((msg) => {
+      if (msg.type === "openExternal" && msg.url) {
         vscode.env.openExternal(vscode.Uri.parse(msg.url));
       }
-      if (msg.type === 'close') {
-        vscode.commands.executeCommand('workbench.action.toggleSidebarVisibility');
+      if (msg.type === "close") {
+        vscode.commands.executeCommand(
+          "workbench.action.toggleSidebarVisibility",
+        );
       }
     });
   }
 
-  _getHtml(codiconUri) {
+  _getHtml(codiconUri, webviewCssUri) {
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <link rel="stylesheet" href="${codiconUri}" />
+  <link rel="stylesheet" href="${webviewCssUri}" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' http://127.0.0.1:${PORT}; frame-src http://127.0.0.1:${PORT}; script-src 'unsafe-inline'; style-src 'unsafe-inline' vscode-resource:; font-src vscode-resource:;" />
-  <style>
-    * { margin: 0; padding: 0; }
-    html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
-    #game { display: block; border: none; }
-    #toolbar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 4px;
-      padding: 0 1rem;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
-      opacity: 0;
-      transition: opacity 0.2s;
-      z-index: 9999;
-    }
-    #toolbar:hover { opacity: 1; }
-    #toolbar button {
-      background: rgba(255,255,255,0.15);
-      border: none;
-      color: #fff;
-      font-size: 14px;
-      width: 26px; height: 26px;
-      border-radius: 4px;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-    }
-    #toolbar button:hover { background: rgba(255,255,255,0.3); }
-  </style>
 </head>
 <body>
   <iframe id="game" src="http://127.0.0.1:${PORT}" allow="cross-origin-isolated; fullscreen; autoplay"></iframe>
@@ -196,8 +194,8 @@ function activate(context) {
     vscode.window.registerWebviewViewProvider(
       ViceCodeViewProvider.viewType,
       new ViceCodeViewProvider(context.extensionUri),
-      { webviewOptions: { retainContextWhenHidden: true } }
-    )
+      { webviewOptions: { retainContextWhenHidden: true } },
+    ),
   );
 }
 

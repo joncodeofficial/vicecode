@@ -1,0 +1,29 @@
+* { margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+#game { display: block; border: none; }
+#toolbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  padding: 0 1rem;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 9999;
+}
+#toolbar:hover { opacity: 1; }
+#toolbar button {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  width: 26px; height: 26px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+#toolbar button:hover { background: rgba(255,255,255,0.3); }
