@@ -4,7 +4,8 @@ const fs = require("fs");
 const path = require("path");
 
 const GAME_DIST = path.join(__dirname, "game", "dist");
-const PORT = 1986;
+const DEFAULT_PORT = 1986;
+let PORT = DEFAULT_PORT;
 
 const INJECT_CSS = fs.readFileSync(
   path.join(__dirname, "assets", "inject.css"),
@@ -81,14 +82,28 @@ document.addEventListener('click', e => {
     });
   });
 
-  server.listen(PORT, "127.0.0.1", () => {
-    console.log(`ViceCode server running on http://127.0.0.1:${PORT}`);
-  });
+  return new Promise((resolve) => {
+    server.once("error", (err) => {
+      if (err.code === "EADDRINUSE") {
+        // Puerto ocupado por un proceso viejo de la extensión que quedó
+        // corriendo (p. ej. tras una actualización sin reload). Usamos
+        // uno libre en vez de romper el webview.
+        server.listen(0, "127.0.0.1");
+        return;
+      }
+      vscode.window.showErrorMessage(
+        `ViceCode: no se pudo iniciar el servidor. ${err.message}`,
+      );
+      resolve();
+    });
 
-  server.on("error", (err) => {
-    vscode.window.showErrorMessage(
-      `ViceCode: no se pudo iniciar el servidor en el puerto ${PORT}. ${err.message}`,
-    );
+    server.once("listening", () => {
+      PORT = server.address().port;
+      console.log(`ViceCode server running on http://127.0.0.1:${PORT}`);
+      resolve();
+    });
+
+    server.listen(DEFAULT_PORT, "127.0.0.1");
   });
 }
 
@@ -187,8 +202,8 @@ class ViceCodeViewProvider {
   }
 }
 
-function activate(context) {
-  startServer();
+async function activate(context) {
+  await startServer();
 
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(
