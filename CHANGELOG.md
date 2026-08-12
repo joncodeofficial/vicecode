@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.2](https://github.com/joncodeofficial/vicecode/compare/v1.2.1...v1.2.2) (2026-08-12)
+
+### Bug Fixes
+
+* use default GITHUB_TOKEN in release workflow ([deb0939](https://github.com/joncodeofficial/vicecode/commit/deb093928db2bd8b1645faef9d42162d86558ec5))
+
 ## [1.2.1](https://github.com/joncodeofficial/vicecode/compare/v1.2.0...v1.2.1) (2026-06-01)
 
 ### Bug Fixes
