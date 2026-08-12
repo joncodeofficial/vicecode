@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.3](https://github.com/joncodeofficial/vicecode/compare/v1.2.2...v1.2.3) (2026-08-12)
+
+### Bug Fixes
+
+* pin pnpm version in release workflow ([1c8a7e6](https://github.com/joncodeofficial/vicecode/commit/1c8a7e658a6f4eb6157937b82d69920810e5adb7))
+* update release workflow to include game setup and remove deploy workflow ([41466b1](https://github.com/joncodeofficial/vicecode/commit/41466b1902a5cf5324bf3554f1a64fc92f38b505))
+
 ## [1.2.2](https://github.com/joncodeofficial/vicecode/compare/v1.2.1...v1.2.2) (2026-08-12)
 
 ### Bug Fixes
