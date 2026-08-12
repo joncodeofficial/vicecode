@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.5](https://github.com/joncodeofficial/vicecode/compare/v1.2.4...v1.2.5) (2026-08-12)
+
+### Bug Fixes
+
+* fall back to a free port if 1986 is already in use ([a2e2618](https://github.com/joncodeofficial/vicecode/commit/a2e26183aee2ada3c58a1c3c6b82d662e93ed581))
+
 ## [1.2.4](https://github.com/joncodeofficial/vicecode/compare/v1.2.3...v1.2.4) (2026-08-12)
 
 ### Bug Fixes
