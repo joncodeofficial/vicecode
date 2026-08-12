@@ -83,12 +83,12 @@ jobs:
 
       - name: Publish to VS Code Marketplace
         if: steps.semantic-release.outputs.new-release-published == 'true'
-        run: npx vsce publish --pat $VSCE_PAT --no-yarn
+        run: vsce publish --pat $VSCE_PAT --no-yarn
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
 
       - name: Publish to Open VSX Registry
         if: steps.semantic-release.outputs.new-release-published == 'true'
-        run: npx ovsx publish --pat $OVSX_PAT
+        run: ovsx publish --pat $OVSX_PAT
         env:
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
