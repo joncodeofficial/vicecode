@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.4](https://github.com/joncodeofficial/vicecode/compare/v1.2.3...v1.2.4) (2026-08-12)
+
+### Bug Fixes
+
+* call vsce/ovsx directly instead of via npx in publish steps ([00eef1b](https://github.com/joncodeofficial/vicecode/commit/00eef1b0c3721c89483ea43cbf9a64ef532e1033))
+
 ## [1.2.3](https://github.com/joncodeofficial/vicecode/compare/v1.2.2...v1.2.3) (2026-08-12)
 
 ### Bug Fixes
