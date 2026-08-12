@@ -36,6 +36,26 @@ jobs:
       - name: Install ovsx
         run: npm install -g ovsx
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node for game
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: game/pnpm-lock.yaml
+
+      - name: Install game dependencies
+        run: pnpm install
+        working-directory: game
+
+      - name: Build game
+        run: pnpm build
+        working-directory: game
+        env:
+          VITE_ASSET_URL: ${{ secrets.VITE_ASSET_URL }}
+
       - name: Package .VSIX
         run: npm run package
 
